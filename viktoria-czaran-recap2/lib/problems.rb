@@ -3,7 +3,7 @@
 def least_common_multiple(num_1, num_2)
   multiples = []
 
-  (num_1...(num_1*num_2)).each { |n| multiples << n if ((n % num_1 == 0) && (n % num_2 == 0))}
+  (1...(num_1*num_2)).each { |n| multiples << n if ((n % num_1 == 0) && (n % num_2 == 0))}
 
   multiples.min
 end
@@ -11,8 +11,17 @@ end
 # Write a method, most_frequent_bigram, that takes in a string and returns the
 # two adjacent letters that appear the most in the string.
 def most_frequent_bigram(str)
+  count = Hash.new(0)
   
+  (0...str.length-1).each do |i|
+     bigram = str[i] + str[i+1]
+     count[bigram] += 1
+  end
+
+  sorted = count.sort_by { |k, v| v }
+  sorted[-1][0]
 end
+
 
 
 class Hash
@@ -28,8 +37,17 @@ class Array
   # Write a method, Array#pair_sum_count, that takes in a target number returns
   # the number of pairs of elements that sum to the given target
   def pair_sum_count(num)
-    
-  end
+    count = 0
+
+    self.each_with_index do |ele1, idx1|
+      self.each_with_index do |ele2, idx2|
+        if (idx2 > idx1) && ((ele1 + ele2) == num)
+          count += 1
+        end
+      end
+    end
+      count
+    end
 
 
   # Write a method, Array#bubble_sort, that takes in an optional proc argument.
@@ -46,6 +64,20 @@ class Array
   #
   # This should remind you of the spaceship operator! Convenient :)
   def bubble_sort(&prc)
-    
+    return self.sort if prc == nil
+
+    sorted = false
+    while !sorted
+        sorted = true
+
+        (0...self.length - 1).each do |i|
+            if prc.call(self[i] , self[i + 1]) == 1
+                self[i], self[i + 1] = self[i + 1], self[i]
+                sorted = false
+            end
+        end
+      end
+      self
   end
+
 end
